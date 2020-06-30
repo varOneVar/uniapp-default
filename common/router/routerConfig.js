@@ -14,7 +14,7 @@ const authRoutes = [
 ]
 
 // 权重是无需登录大，如果无需登录就不用判断权限了
-const notLogin = [{
+export const notLogin = [{
 	path: 'pages/index/index',
 }]
 export default authRoutes

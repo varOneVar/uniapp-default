@@ -6,7 +6,8 @@ import user from './modules/user.js'
 import getters from './getters.js'
 import createPersistedState from 'vuex-persistedstate'
 import settings from '../settings.js'
-
+import storage from '../utils/storage.js'
+const Storage = storage()
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -16,37 +17,14 @@ const store = new Vuex.Store({
 		user
 	},
 	getters,
-	state: {
-		hasLogin: false,
-		userInfo: {},
-	},
-	mutations: {
-		login(state, provider) {
-
-			state.hasLogin = true;
-			state.userInfo = provider;
-			uni.setStorage({//缓存用户登陆状态
-			    key: 'userInfo',  
-			    data: provider  
-			}) 
-			console.log(state.userInfo);
-		},
-		logout(state) {
-			state.hasLogin = false;
-			state.userInfo = {};
-			uni.removeStorage({  
-                key: 'userInfo'  
-            })
-		}
-	},
 	plugins:[
 		createPersistedState({
 			storage: {
-				getItem: key => uni.getStorageSync(key),
-				setItem: (key, value) => uni.setStorageSync(key, value),
-				removeItem: key => uni.removeStorageSync(key)
+				getItem: key => Storage.get(key),
+				setItem: (key, value) => Storage.set(key, value),
+				removeItem: key => Storage.remove(key)
 			},
-			key: `${settings.appName}-key`
+			key: `${settings.appName}-vuex_key`
 		})
 	]
 })
